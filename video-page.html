@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INFO4M - Adventure</title>
+    <link rel="stylesheet" href="assets/bootstrap-5.0.0/bootstrap.min.css">
+    <link rel="shortcut icon" href="assets/images/wolf-and-moon-icon.png">
+
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .background{
+            position: absolute;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+        }
+        video{
+            width:80%;
+            height:80%;
+        }
+        
+    </style>
+</head>
+<body>
+        <img src="assets/images/theater-curtain.jpg" alt="pergaminho" class="background">
+        <video controls>
+            <source src="assets/videos/teste.mp4" type="video/mp4">
+            Your browser doen't suport video tag.
+        </video>
+    <script src="assets/jquery-3.5.1.min.js"></script>
+    <script src="assets/bootstrap-5.0.0/bootstrap.bundle.min.js"></script>
+    <script>
+        var videosPlayeds = 0;
+        $("document").ready(()=>{
+            document.getElementsByTagName("video")[0].play();
+        })
+    </script>
+</body>
+</html>

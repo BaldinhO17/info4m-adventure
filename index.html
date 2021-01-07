@@ -5,20 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INFO4M - Adventure</title>
     <link rel="stylesheet" href="assets/bootstrap-5.0.0/bootstrap.min.css">
+    <link rel="shortcut icon" href="assets/images/wolf-and-moon-icon.png">
 
     <style>
         body {
             width: 100vw;
             height: 100vh;
             background-image: linear-gradient(150deg, #0d6efd, #000);
-        }
-        #presentation {
-            position: absolute;
-            top: 18%;
-            left: 18%;
-        }
-        #presentation button {
-            margin-left: 2rem;
         }
         .background{
             position: absolute;
@@ -28,23 +21,35 @@
             width: 95%;
             height: 95%;
         }
+        #presentation {
+            position: absolute;
+            top: 18%;
+            left: 18%;
+        }
+        #presentation button {
+            margin-left: 2rem;
+        }
+        
     </style>
 </head>
 <body>
-    <div id="desafio">
-        <img src="images/parchment.png" alt="pergaminho" class="background">
-        <div id="presentation">
-            <h1>Bom dia, Lobão!</h1>
-            <h3>Vamos embarcar em uma aventura com INFO4M?</h3>
-            <img src="images/wolf-teacher.png" alt="Lobo de terno e gravata" width="350" height="350">
-            <button class="btn btn-outline-primary" type="button" >
-                Vamos-lá!
-            </button>
-            
-        </div>
+    <img src="assets/images/parchment.png" alt="pergaminho" class="background">
+    <div id="presentation">
+        <h1>Bom dia, Lobão!</h1>
+        <h3>Vamos embarcar em uma aventura com INFO4M?</h3>
+        <img src="assets/images/wolf-teacher.png" alt="Lobo de terno e gravata" width="350" height="350">
+        <button class="btn btn-outline-primary" type="button" >
+            Vamos-lá!
+        </button>
         
     </div>
+        
     <script src="assets/jquery-3.5.1.min.js"></script>
     <script src="assets/bootstrap-5.0.0/bootstrap.bundle.min.js"></script>
+    <script>
+        $("button").click(()=>{
+            window.location.assign("message.html")
+        })
+    </script>
 </body>
 </html>
