@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      @import url(assets/windows-xp.css);
+
+      body {
+        margin: 0;
+      }
+
+      #windows {
+        position: absolute;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        background-size: 100vw 100vh;
+        background-image: url(assets/images/simulator-wallpaper.jpg);
+      }
+
+      #windows>.title-bar {
+        position: absolute;
+        padding-left: 0;
+        bottom: 0;
+        border-radius: 0;
+        width: 100%;
+      }
+
+      .window img {
+        width: 1em;
+        position: relative;
+        margin-right: 2px;
+        bottom: -2px;
+      }
+
+      #windows>img {
+        position: absolute;
+        bottom: 0;
+        height: 28px;
+      }
+
+      #windows .window {
+        position: absolute;
+        width: 75vw;
+        height: 75vh;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        resize: both;
+        overflow: hidden;
+      }
+
+      #windows aside {
+        padding: 24px;
+        width: fit-content;
+      }
+
+      #windows a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 24px;
+        text-decoration: none;
+      }
+
+      #windows a:focus {
+        opacity: .5;
+        background-color: blue;
+      }
+
+      #windows a img {
+        width: 32px;
+      }
+
+      #windows span {
+        color: white;
+        margin-top: 4px;
+        font-family: 'Pixelated MS Sans Serif', sans-serif;
+        text-shadow: 1px 1px 1px black;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="windows">
+      <div class="title-bar"></div>
+      <img src="assets/images/simulator-button.png">
+      <aside>
+        <a href="#">
+          <img src="assets/images/simulator-trash.png">
+          <span>Lixeira</span>
+        </a>
+        <a href="#">
+          <img src="assets/images/simulator-explorer.png">
+          <span>Internet Explorer</span>
+        </a>
+        <a id="abrir" href="#">
+          <img src="assets/images/simulator-icon.png">
+          <span>Big Wolf Simulator</span>
+        </a>
+      </aside>
+      <div id="janela" class="window" hidden>
+        <div class="title-bar">
+          <div class="title-bar-text">
+            <img src="assets/images/simulator-icon.png"> Big Wolf Simulator
+          </div>
+          <div class="title-bar-controls">
+            <button aria-label="Minimize"></button>
+            <button aria-label="Maximize"></button>
+            <button aria-label="Close"></button>
+          </div>
+        </div>
+        <div class="window-body"></div>
+      </div>
+    </div>
+    <script>
+      document.onclick = () => ligando.play()
+      abrir.ondblclick = e => {
+        e.preventDefault()
+        janela.removeAttribute('hidden')
+      }
+    </script>
+  </body>
+</html>
