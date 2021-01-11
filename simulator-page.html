@@ -1,8 +1,10 @@
 <!doctype html>
 <html>
   <head>
+    <link rel="icon" href="assets/images/wolf-and-moon-icon.png">
     <style>
-      @import url(assets/xp.css);
+      @import url(assets/xp/XP.css);
+      @import url(assets/codemirror/codemirror.css);
 
       body {
         margin: 0;
@@ -25,6 +27,11 @@
         width: 100%;
       }
 
+      .window[hidden] {
+        display: block;
+        opacity: 0;
+      }
+
       .window img {
         width: 1em;
         position: relative;
@@ -41,7 +48,7 @@
       #windows .window {
         position: absolute;
         width: 75vw;
-        height: 75vh;
+        height: 545px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -71,11 +78,46 @@
         width: 32px;
       }
 
-      #windows span {
+      #windows a span {
         color: white;
         margin-top: 4px;
         font-family: 'Pixelated MS Sans Serif', sans-serif;
         text-shadow: 1px 1px 1px black;
+      }
+
+      .window-body {
+        display: flex;
+      }
+
+      .window-body section {
+        width: 50%;
+      }
+
+      .CodeMirror {
+        height: 500px;
+        font-size: medium;
+      }
+
+      .resultado {
+        display: grid;
+        place-items: center;
+      }
+
+      table {
+        border-radius: 1em;
+        color: white;
+        background-color: black;
+      }
+
+      video {
+        width: 100%;
+      }
+
+      th,
+      td {
+        border: 1px solid;
+        padding: 1em;
+        border-collapse: collapse;
       }
     </style>
   </head>
@@ -108,14 +150,56 @@
             <button aria-label="Close"></button>
           </div>
         </div>
-        <div class="window-body"></div>
+        <div class="window-body">
+          <section id="edição"></section>
+          <section class="resultado">
+            <table id="tabela" hidden></table>
+            <video id="pepsi" src="assets/videos/pepsi.mp4"></video>
+            <video id="errou" src="assets/videos/errou.mp4" hidden></video>
+            <video id="acertou" src="assets/videos/acertou.mp4" hidden></video>
+          </section>
+        </div>
       </div>
     </div>
-    <script>
-      document.onclick = () => ligando.play()
-      abrir.ondblclick = e => {
-        e.preventDefault()
+    <script type="module">
+      import './assets/codemirror/codemirror.js'
+      import './assets/codemirror/javascript.js'
+      import './assets/canvas-confetti.js'
+      const editor = CodeMirror(edição, {
+        mode: 'javascript',
+        autofocus: true,
+        value: `fetch('assets/tarefas.json').then(resposta => {
+  const tarefas = resposta.json()
+  const cabeçalho = \`<tr>\$\{Object.keys(tarefas[0]).map(chave => \`<th>\$\{chave[0].toUpperCase() + chave.slice(1)\}</th>\`).join('')}</tr>\`
+  const conteúdo = tarefas.map(tarefa => \`<tr>\$\{Object.values(tarefa).map(valor => \`<td>\$\{valor\}</td>\`).join('')}</tr>\`).join('')
+  document.querySelector('table').innerHTML = cabeçalho + conteúdo
+})`
+      })
+      editor.on('change', async () => {
+        pepsi.hidden = true
+        tabela.hidden = true
+        errou.pause()
+        acertou.pause()
+        errou.currentTime = acertou.currentTime = 0
+        try {
+          await eval(editor.getValue())
+          errou.hidden = true
+          acertou.hidden = false
+          tabela.hidden = false
+          acertou.play()
+          confetti({
+            spread: 180,
+            particleCount: 500
+          })
+        } catch (e) {
+          acertou.hidden = true
+          errou.hidden = false
+          errou.play()
+        }
+      })
+      abrir.ondblclick = () => {
         janela.removeAttribute('hidden')
+        pepsi.play()
       }
     </script>
   </body>
