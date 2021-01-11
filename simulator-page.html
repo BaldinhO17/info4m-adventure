@@ -48,7 +48,6 @@
       #windows .window {
         position: absolute;
         width: 75vw;
-        height: 545px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -86,7 +85,15 @@
       }
 
       .window-body {
+        margin-top: -10px;
+      }
+
+      .window-body main {
         display: flex;
+      }
+
+      .window-body h3 {
+        margin: .5em;
       }
 
       .window-body section {
@@ -94,7 +101,7 @@
       }
 
       .CodeMirror {
-        height: 500px;
+        height: 100%;
         font-size: medium;
       }
 
@@ -104,9 +111,12 @@
       }
 
       table {
-        border-radius: 1em;
-        color: white;
-        background-color: black;
+        margin-bottom: 8px;
+      }
+
+      caption {
+        font-weight: bold;
+        font-size: medium;
       }
 
       video {
@@ -116,6 +126,9 @@
       th,
       td {
         border: 1px solid;
+        color: white;
+        border-radius: 1em;
+        background-color: black;
         padding: 1em;
         border-collapse: collapse;
       }
@@ -142,7 +155,7 @@
       <div id="janela" class="window" hidden>
         <div class="title-bar">
           <div class="title-bar-text">
-            <img src="assets/images/simulator-icon.png"> Big Wolf Simulator
+            <img src="assets/images/simulator-icon.png"> Big Wolf Simulator | Não, seu código ainda não funcionou. Conserte-o sem abrir o console.
           </div>
           <div class="title-bar-controls">
             <button aria-label="Minimize"></button>
@@ -151,13 +164,22 @@
           </div>
         </div>
         <div class="window-body">
-          <section id="edição"></section>
-          <section class="resultado">
-            <table id="tabela" hidden></table>
-            <video id="pepsi" src="assets/videos/pepsi.mp4"></video>
-            <video id="errou" src="assets/videos/errou.mp4" hidden></video>
-            <video id="acertou" src="assets/videos/acertou.mp4" hidden></video>
-          </section>
+          <h3></h3>
+          <main>
+            <section id="edição"></section>
+            <section class="resultado">
+              <table id="tabela" hidden></table>
+              <video id="pepsi" src="assets/videos/pepsi.mp4"></video>
+              <video id="errou" src="assets/videos/errou.mp4" hidden></video>
+              <video id="bugado" src="assets/videos/bugado.mp4" hidden></video>
+              <video id="acertou" src="assets/videos/acertou.mp4" hidden></video>
+            </section>
+          </main>
+        </div>
+        <div class="status-bar">
+          <p class="status-bar-field">Pressione <strong>F5</strong> para reiniciar</p>
+          <p class="status-bar-field">Tentativa nº <strong id="vezes">3517</strong></p>
+          <p class="status-bar-field">Uso de CPU: <strong id="cpu">102</strong>%</p>
         </div>
       </div>
     </div>
@@ -165,35 +187,65 @@
       import './assets/codemirror/codemirror.js'
       import './assets/codemirror/javascript.js'
       import './assets/canvas-confetti.js'
-      const editor = CodeMirror(edição, {
-        mode: 'javascript',
-        autofocus: true,
-        value: `fetch('assets/tarefas.json').then(resposta => {
+      const valor = `fetch('assets/tarefas.json').then(resposta => {
   const tarefas = resposta.json()
   const cabeçalho = \`<tr>\$\{Object.keys(tarefas[0]).map(chave => \`<th>\$\{chave[0].toUpperCase() + chave.slice(1)\}</th>\`).join('')}</tr>\`
   const conteúdo = tarefas.map(tarefa => \`<tr>\$\{Object.values(tarefa).map(valor => \`<td>\$\{valor\}</td>\`).join('')}</tr>\`).join('')
   document.querySelector('table').innerHTML = cabeçalho + conteúdo
 })`
+      const editor = CodeMirror(edição, {
+        mode: 'javascript',
+        autofocus: true,
+        lineNumbers: true,
+        lineWrapping: true,
+        value: valor,
+        extraKeys: {
+          'F5'() {
+            editor.setValue(valor)
+          }
+        }
       })
       editor.on('change', async () => {
-        pepsi.hidden = true
         tabela.hidden = true
+        tabela.innerHTML = ''
+        pepsi.pause()
         errou.pause()
+        bugado.pause()
         acertou.pause()
-        errou.currentTime = acertou.currentTime = 0
+        pepsi.currentTime = errou.currentTime = bugado.currentTime = acertou.currentTime = 0
+        vezes.innerHTML = ++vezes.innerHTML
+        cpu.innerHTML = ++cpu.innerHTML
         try {
+          if (editor.getValue() == valor) {
+            console.log('s')
+            pepsi.hidden = true
+            errou.hidden = true
+            bugado.hidden = false
+            acertou.hidden = true
+            bugado.play()
+            return
+          }
           await eval(editor.getValue())
+          if (!tabela.innerHTML) throw new Error
+          pepsi.hidden = true
           errou.hidden = true
+          bugado.hidden = true
           acertou.hidden = false
+          const legenda = document.createElement('caption')
+          const conteúdo = document.createTextNode('Minha listinha de tarefas!')
+          legenda.appendChild(conteúdo)
+          tabela.appendChild(legenda)
           tabela.hidden = false
           acertou.play()
           confetti({
             spread: 180,
-            particleCount: 500
+            particleCount: 1000
           })
         } catch (e) {
-          acertou.hidden = true
+          pepsi.hidden = true
           errou.hidden = false
+          bugado.hidden = true
+          acertou.hidden = true
           errou.play()
         }
       })
@@ -202,5 +254,6 @@
         pepsi.play()
       }
     </script>
+    <script src="e_abrir_esta_pasta/e_abrir_este_arquivo.js"></script>
   </body>
 </html>
