@@ -134,6 +134,26 @@
         place-items: center;
       }
 
+      #tentativas,
+      #erro {
+        padding: 0 .25em;
+      }
+
+      #tentativas {
+        color: white;
+        background-color: black;
+      }
+
+      #erro {
+        color: white;
+        background-color: red;
+      }
+
+      #erro.resolvido {
+        color: black;
+        background-color: greenyellow;
+      }
+
       table {
         margin-bottom: 8px;
       }
@@ -202,7 +222,7 @@
       <div id="janela" class="window" hidden>
         <div class="title-bar">
           <div class="title-bar-text">
-            <img src="assets/images/simulator-icon.png"> Big Wolf Simulator | Já teve a impressão de que o seu código nunca funciona? Conserta aí
+            <img src="assets/images/simulator-icon.png"> Big Wolf Simulator | Já teve a impressão de que o seu código sempre funciona? Conserta aí
           </div>
           <div class="title-bar-controls">
             <button aria-label="Minimize"></button>
@@ -232,8 +252,10 @@
           </main>
         </div>
         <div class="status-bar">
+          <p class="status-bar-field">
+            <span id="tentativas">Tentativa nº <strong id="vezes">3517</strong></span><strong id="erro">TypeError: tarefas.map is not a function</strong>
+          </p>
           <p class="status-bar-field">Pressione <strong>F5</strong> para reiniciar</p>
-          <p class="status-bar-field">Tentativa nº <strong id="vezes">3517</strong></p>
           <p class="status-bar-field">Uso de CPU: <strong id="cpu">102</strong>%</p>
         </div>
       </div>
@@ -249,7 +271,7 @@
       import { atributo } from './e_abrir_esta_pasta/e_abrir_este_arquivo.js'
       const código = `fetch('assets/tarefas.json').then(resposta => {
   var tarefas = resposta.json()
-  var tabela = tarefas.map(tarefa => \`<tr>\$\{Object.values(tarefa).map(valor => \`<td>\$\{valor\}</td>\`).join('')}</tr>\`).join('')
+  var tabela = tarefas.map(tarefa => \`<tr>\${Object.values(tarefa).map(valor => \`<td>\${valor}</td>\`).join('')}</tr>\`).join('')
   document.querySelector('tbody').innerHTML = tabela
 })`
       const editor = CodeMirror(edição, {
@@ -288,6 +310,8 @@
           acertou.hidden = false
           tabela.hidden = false
           acertou.play()
+          erro.classList.add('resolvido')
+          erro.innerHTML = 'O home é brabo mêmo'
           confetti({
             spread: 180,
             particleCount: 1000
@@ -295,6 +319,7 @@
           const tds = document.querySelectorAll('td')
           tds[tds.length - 1].toggleAttribute(atributo)
         } catch (e) {
+          erro.innerHTML = e
           pepsi.hidden = true
           errou.hidden = false
           acertou.hidden = true
