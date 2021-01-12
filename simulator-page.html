@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <head>
+    <title>INFO4M - Adventure</title>
     <link rel="icon" href="assets/images/wolf-and-moon-icon.png">
     <style>
       @import url(assets/xp/XP.css);
@@ -8,6 +9,23 @@
 
       body {
         margin: 0;
+      }
+
+      #xp {
+        height: 100vh;
+        width: 100vw;
+        position: absolute;
+        backdrop-filter: brightness(0);
+      }
+
+      #ligar {
+        position: absolute;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        cursor: pointer;
+        width: 100vw;
+        height: 100vh;
       }
 
       #windows {
@@ -45,14 +63,16 @@
         height: 28px;
       }
 
-      #windows .window {
+      .window,
+      #ligar {
         position: absolute;
-        width: 75vw;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        resize: both;
-        overflow: hidden;
+      }
+
+      .window[hidden] {
+        z-index: -1;
       }
 
       #windows aside {
@@ -84,7 +104,11 @@
         text-shadow: 1px 1px 1px black;
       }
 
-      .window-body {
+      #janela {
+        width: 75vw;
+      }
+
+      #janela .window-body {
         margin-top: -10px;
       }
 
@@ -121,6 +145,7 @@
 
       video {
         width: 100%;
+        cursor: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7), auto;
       }
 
       th,
@@ -130,7 +155,29 @@
         border-radius: 1em;
         background-color: black;
         padding: 1em;
-        border-collapse: collapse;
+      }
+
+      td:not([e-remover-este-atributo]) {
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: '⬇️';
+        content: 'e abrir o painel "Sources"';
       }
     </style>
   </head>
@@ -155,7 +202,7 @@
       <div id="janela" class="window" hidden>
         <div class="title-bar">
           <div class="title-bar-text">
-            <img src="assets/images/simulator-icon.png"> Big Wolf Simulator | Não, seu código ainda não funcionou. Conserte-o sem abrir o console.
+            <img src="assets/images/simulator-icon.png"> Big Wolf Simulator | Já teve a impressão de que o seu código nunca funciona? Conserta aí
           </div>
           <div class="title-bar-controls">
             <button aria-label="Minimize"></button>
@@ -168,10 +215,18 @@
           <main>
             <section id="edição"></section>
             <section class="resultado">
-              <table id="tabela" hidden></table>
+              <table id="tabela" hidden>
+                <caption>Minha listinha de tarefas!</caption>
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Descrição</th>
+                  </tr>
+                </thead>
+                <tbody id="corpo"></tbody>
+              </table>
               <video id="pepsi" src="assets/videos/pepsi.mp4"></video>
               <video id="errou" src="assets/videos/errou.mp4" hidden></video>
-              <video id="bugado" src="assets/videos/bugado.mp4" hidden></video>
               <video id="acertou" src="assets/videos/acertou.mp4" hidden></video>
             </section>
           </main>
@@ -183,68 +238,65 @@
         </div>
       </div>
     </div>
+    <video id="xp" src="assets/videos/xp.mp4"></video>
+    <button id="ligar">
+      <img src="assets/images/power-on.png">
+    </button>
     <script type="module">
       import './assets/codemirror/codemirror.js'
       import './assets/codemirror/javascript.js'
       import './assets/canvas-confetti.js'
-      const valor = `fetch('assets/tarefas.json').then(resposta => {
-  const tarefas = resposta.json()
-  const cabeçalho = \`<tr>\$\{Object.keys(tarefas[0]).map(chave => \`<th>\$\{chave[0].toUpperCase() + chave.slice(1)\}</th>\`).join('')}</tr>\`
-  const conteúdo = tarefas.map(tarefa => \`<tr>\$\{Object.values(tarefa).map(valor => \`<td>\$\{valor\}</td>\`).join('')}</tr>\`).join('')
-  document.querySelector('table').innerHTML = cabeçalho + conteúdo
+      import { atributo } from './e_abrir_esta_pasta/e_abrir_este_arquivo.js'
+      const código = `fetch('assets/tarefas.json').then(resposta => {
+  var tarefas = resposta.json()
+  var tabela = tarefas.map(tarefa => \`<tr>\$\{Object.values(tarefa).map(valor => \`<td>\$\{valor\}</td>\`).join('')}</tr>\`).join('')
+  document.querySelector('tbody').innerHTML = tabela
 })`
       const editor = CodeMirror(edição, {
         mode: 'javascript',
         autofocus: true,
         lineNumbers: true,
         lineWrapping: true,
-        value: valor,
+        value: código,
         extraKeys: {
           'F5'() {
-            editor.setValue(valor)
+            editor.setValue(código)
           }
         }
       })
+
+      ligar.onclick = () => {
+        ligar.remove()
+        xp.play()
+      }
+      xp.onended = xp.remove
+      document.addEventListener('keypress', e => e.key == 'ç' && xp.remove())
       editor.on('change', async () => {
         tabela.hidden = true
-        tabela.innerHTML = ''
+        corpo.innerHTML = ''
         pepsi.pause()
         errou.pause()
-        bugado.pause()
         acertou.pause()
-        pepsi.currentTime = errou.currentTime = bugado.currentTime = acertou.currentTime = 0
+        pepsi.currentTime = errou.currentTime = acertou.currentTime = 0
         vezes.innerHTML = ++vezes.innerHTML
         cpu.innerHTML = ++cpu.innerHTML
         try {
-          if (editor.getValue() == valor) {
-            console.log('s')
-            pepsi.hidden = true
-            errou.hidden = true
-            bugado.hidden = false
-            acertou.hidden = true
-            bugado.play()
-            return
-          }
           await eval(editor.getValue())
-          if (!tabela.innerHTML) throw new Error
+          if (!corpo.innerHTML) throw new Error
           pepsi.hidden = true
           errou.hidden = true
-          bugado.hidden = true
           acertou.hidden = false
-          const legenda = document.createElement('caption')
-          const conteúdo = document.createTextNode('Minha listinha de tarefas!')
-          legenda.appendChild(conteúdo)
-          tabela.appendChild(legenda)
           tabela.hidden = false
           acertou.play()
           confetti({
             spread: 180,
             particleCount: 1000
           })
+          const tds = document.querySelectorAll('td')
+          tds[tds.length - 1].toggleAttribute(atributo)
         } catch (e) {
           pepsi.hidden = true
           errou.hidden = false
-          bugado.hidden = true
           acertou.hidden = true
           errou.play()
         }
@@ -254,6 +306,5 @@
         pepsi.play()
       }
     </script>
-    <script src="e_abrir_esta_pasta/e_abrir_este_arquivo.js"></script>
   </body>
 </html>
