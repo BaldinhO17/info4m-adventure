@@ -159,6 +159,7 @@
       }
 
       caption {
+        font-family: cursive;
         font-weight: bold;
         font-size: medium;
       }
@@ -304,7 +305,9 @@
         cpu.innerHTML = ++cpu.innerHTML
         try {
           await eval(editor.getValue())
-          if (!corpo.innerHTML) throw new Error
+          if (corpo.innerHTML != '<tr><td>13/01/2020</td><td>Abrir o inspetor</td></tr><tr><td>13/01/2020</td><td>E inspecionar este &lt;td&gt;</td></tr>') {
+            throw new Error('Tá faltando coisa aí, hein...')
+          }
           pepsi.hidden = true
           errou.hidden = true
           acertou.hidden = false
