@@ -25,7 +25,9 @@
             width:80%;
             height:80%;
         }
-        
+        a{
+            transition: 100ms ease-in;
+        }
     </style>
 </head>
 <body>
@@ -34,15 +36,19 @@
             <source src="assets/videos/camila.mp4" type="video/mp4">
             Your browser doen't suport video tag.
         </video>
-        <a class="btn btn-warning" href="simulator-page.html">
+        <a class="btn btn-warning" href="simulator-page.html" hidden>
             Pronto para o desafio?
         </a>
     <script src="assets/jquery-3.5.1.min.js"></script>
     <script src="assets/bootstrap-5.0.0/bootstrap.bundle.min.js"></script>
     <script>
         var videosPlayeds = 0;
+        document.querySelector("video").onended = function() {
+            document.querySelector(".btn.btn-warning").removeAttribute("hidden");
+        };
         $("document").ready(()=>{
             document.getElementsByTagName("video")[0].play();
+            
         })
     </script>
 </body>
