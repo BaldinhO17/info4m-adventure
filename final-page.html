@@ -3,8 +3,167 @@
   <head>
     <title>INFO4M - Adventure</title>
     <link rel="icon" href="assets/images/wolf-and-moon-icon.png">
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .tocando {
+        height: 100vh;
+        background: linear-gradient(-45deg, #23d5ab, #e73c7e);
+        background-size: 400% 400%;
+        animation: gradiente 28s ease infinite;
+      }
+
+      @keyframes gradiente {
+        0% {
+          background-position: 0% 50%;
+        }
+
+        50% {
+          background-position: 100% 50%;
+        }
+
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      #juan {
+        height: 100vh;
+        width: 100vw;
+        transform: scale(20);
+        transform-origin: 48% 45%;
+        transition: 5s;
+        cursor: pointer;
+      }
+
+      .tocando #juan {
+        transform: none;
+        cursor: default;
+      }
+
+      #dança {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        height: 65vh;
+        transform: translate(-45%, 100%);
+        transition: 10s;
+      }
+
+      .confete #dança {
+        transform: translate(-45%, 0);
+      }
+
+      .pronto #juan {
+        transition: 10s;
+        transform: scale(8);
+        transform-origin: 52% 28%;
+      }
+
+      .pronto #dança {
+        transform: translateY(100%);
+      }
+
+      dialog {
+        font-family: sans-serif;
+        align-items: center;
+        top: 50%;
+        display: flex;
+        transition: 2.5s;
+        transition-delay: 10s;
+        transform: translateY(-50%);
+        opacity: 0;
+        padding: 2em;
+        gap: 1em;
+        border-radius: 2em;
+        border: none;
+        box-shadow: 0 4px 16px 4px #00000080;
+      }
+
+      dialog[open] {
+        opacity: 1;
+      }
+
+      dialog button {
+        border-radius: 1em;
+        font-variant: small-caps;
+        text-transform: lowercase;
+        border: 2px solid;
+        font-weight: bold;
+        padding: 1em 1.5em;
+        background-color: transparent;
+        transition: .5s;
+      }
+
+      dialog button:first-child {
+        border-color: greenyellow;
+      }
+
+      dialog button:last-child {
+        border-color: red;
+      }
+
+      dialog button:first-child:hover {
+        color: white;
+        background-color: greenyellow;
+      }
+
+      dialog button:last-child:hover {
+        color: white;
+        background-color: red;
+      }
+    </style>
   </head>
   <body>
-
+    <video id="juan" src="assets/videos/juan.mp4"></video>
+    <audio id="resto" src="assets/videos/juan.mp3" hidden></audio>
+    <img id="dança" src="assets/images/dança.gif">
+    <dialog id="surpresa">
+      <button>Sim?</button>
+      ou
+      <button>Não?</button>
+    </dialog>
   </body>
+  <script type="module">
+    import './assets/canvas-confetti.js'
+    juan.onclick = () => {
+      document.body.classList.add('tocando')
+      juan.play()
+    }
+    juan.onended = () => {
+      resto.play()
+      document.body.classList.add('pronto')
+      surpresa.open = true
+    }
+    juan.onplay = () => {
+      setTimeout(() => {
+        const fim = Date.now() + (15 * 1000)
+        const cores = ['#bb0000', '#ffffff'];
+        (function frame() {
+          confetti({
+            particleCount: 2,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: cores
+          })
+          confetti({
+            particleCount: 2,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: cores
+          })
+
+          if (Date.now() < fim) {
+            requestAnimationFrame(frame)
+          }
+        }())
+        document.body.classList.add('confete')
+      }, 14000)
+    }
+  </script>
 </html>
