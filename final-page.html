@@ -67,64 +67,63 @@
         transform: translateY(100%);
       }
 
+      dialog,
+      dialog * {
+        transition: 2.5s;
+        transition-delay: 10s;
+      }
+
       dialog {
         font-family: sans-serif;
         align-items: center;
+        flex-direction: column;
         top: 50%;
         display: flex;
-        transition: 2.5s;
-        transition-delay: 10s;
         transform: translateY(-50%);
         opacity: 0;
         padding: 2em;
         gap: 1em;
         border-radius: 2em;
         border: none;
+        z-index: -1;
         box-shadow: 0 4px 16px 4px #00000080;
       }
 
       dialog[open] {
         opacity: 1;
+        z-index: 0;
       }
 
-      dialog button {
-        border-radius: 1em;
-        font-variant: small-caps;
-        text-transform: lowercase;
-        border: 2px solid;
-        font-weight: bold;
-        padding: 1em 1.5em;
-        background-color: transparent;
-        transition: .5s;
+      dialog h1 {
+        font-size: 72px;
+        background: -webkit-linear-gradient(#e73c7e, #23d5ab);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
 
-      dialog button:first-child {
-        border-color: greenyellow;
+      dialog img {
+        /* opacity: 0; */
+        /* transition: 10s; */
+        width: 75vw;
+        border-radius: 2em;
+        /* transform: scale(50);
+        transform-origin: 45% 23%; */
       }
 
-      dialog button:last-child {
-        border-color: red;
-      }
-
-      dialog button:first-child:hover {
-        color: white;
-        background-color: greenyellow;
-      }
-
-      dialog button:last-child:hover {
-        color: white;
-        background-color: red;
-      }
+      /* .pronto dialog img {
+        opacity: 1;
+        transform: none;
+      } */
     </style>
   </head>
   <body>
     <video id="juan" src="assets/videos/juan.mp4"></video>
+    <audio id="buzina" src="assets/videos/buzina.mp3"></audio>
     <audio id="resto" src="assets/videos/juan.mp3" hidden></audio>
     <img id="dança" src="assets/images/dança.gif">
     <dialog id="surpresa">
-      <button>Sim?</button>
-      ou
-      <button>Não?</button>
+      <h1>Fostes convidado. Aceitas?</h1>
+      <div><img src="assets/images/turma.jpeg"></div>
     </dialog>
   </body>
   <script type="module">
@@ -163,6 +162,7 @@
           }
         }())
         document.body.classList.add('confete')
+        setTimeout(() => buzina.play(), 500)
       }, 14000)
     }
   </script>
